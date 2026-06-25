@@ -1,0 +1,6 @@
+# Minimal dependencies for reproducing the ASOC sparse index-tracking notebooks.
+# Python >= 3.10 is recommended.
+
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
