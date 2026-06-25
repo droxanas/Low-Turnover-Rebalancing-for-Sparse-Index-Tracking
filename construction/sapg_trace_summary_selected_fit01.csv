@@ -1,0 +1,2 @@
+fit_k,c_star,sigma2_star,theta0,theta_EB,theta_final,theta_trace_median_post_burn,theta_trace_mean_post_burn,weighted_l1_mean_post_burn,weighted_l1_median_post_burn,sapg_iterations,sapg_iterations_requested,sapg_pr_burn,sapg_pr_burn_effective_start,sapg_seconds
+1,25.0,1.0392726913820346e-05,130.02082823870262,361.66234238937585,354.3905624177422,362.939490177057,366.99829139588485,1.082935678039333,1.0932807407154375,1500,1500,400,401,0.4505079290001959
