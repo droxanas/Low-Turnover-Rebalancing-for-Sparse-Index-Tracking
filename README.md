@@ -2,59 +2,59 @@
 
 SPDX-License-Identifier: GPL-3.0-or-later
 
-This repository contains the code and archived outputs used to reproduce the empirical results for the paper **"Low-Turnover Rebalancing for Sparse Index Tracking"**.
+This repository contains the code, processed data, and archived CSV outputs used to reproduce the empirical results for the paper **"Low-Turnover Rebalancing for Sparse Index Tracking"**.
 
 The paper studies a generalised-Bayes workflow for sparse index tracking in which tracker construction and tracker maintenance are treated as separate decisions. The initial tracker is built once using a calibrated shrinkage model and posterior support screening. Subsequent rebalance dates are handled in the self-financing change variable `Delta w`; the default action is no trade, and bounded local repairs are implemented only when realised tracking deterioration and posterior directional evidence jointly support intervention.
 
-The repository is intended for reproducibility of the reported case study, not as investment advice or as a production trading system.
+This repository is intended for reproducibility of the reported case study. It is not investment advice, and it is not a production trading system.
 
 ## Repository structure
 
-A typical checkout should have the following structure.
+The repository is organised as follows.
 
 ```text
 .
-├── 01_tracker_construction_github.ipynb
-├── 02_tracker_maintenance_github.ipynb
+├── 01_tracker_construction.ipynb
+├── 02_tracker_maintenance.ipynb
 ├── requirements.txt
 ├── LICENSE
+├── README.md
 ├── data/
 │   ├── merged_sp500_returns_2020_2025.csv
 │   ├── asset_universe.csv
 │   └── rolling_windows.csv
-└── outputs/
-    ├── construction/
-    │   ├── construction_fit01_cgrid_summary.csv
-    │   ├── construction_selected_fit01_row.csv
-    │   ├── construction_refit_floor_audit.csv
-    │   ├── practical_positive_support_sensitivity.csv
-    │   ├── construction_mala_diagnostics.csv
-    │   ├── construction_mala_coordinate_ess.csv
-    │   ├── sapg_trace_selected_fit01.csv
-    │   ├── sapg_trace_summary_selected_fit01.csv
-    │   └── fista_trace_selected_fit01.csv
-    ├── maintenance/
-    │   ├── hold_summary.csv
-    │   ├── decision_summary.csv
-    │   ├── daily_paths.csv
-    │   ├── full_compositions.csv
-    │   ├── portfolio_composition_summary.csv
-    │   ├── top50_compositions.csv
-    │   ├── recovery_candidates.csv
-    │   ├── recovery_state_log.csv
-    │   ├── recovery_funding_actions.csv
-    │   ├── small_weight_summary.csv
-    │   ├── sequential_rebalance_audit.csv
-    │   ├── delta_w_selected_rows.csv
-    │   ├── delta_w_cgrid_all_holds.csv
-    │   └── delta_w_mala_diagnostics.csv
-    ├── comparisons/
-    │   └── te_turnover_frontier_full_horizon_data.csv
-    ├── csv_manifest.csv
-    └── checksums.csv
+├── construction/
+│   ├── construction_fit01_cgrid_summary.csv
+│   ├── construction_selected_fit01_row.csv
+│   ├── construction_refit_floor_audit.csv
+│   ├── practical_positive_support_sensitivity.csv
+│   ├── construction_mala_diagnostics.csv
+│   ├── construction_mala_coordinate_ess.csv
+│   ├── sapg_trace_selected_fit01.csv
+│   ├── sapg_trace_summary_selected_fit01.csv
+│   └── fista_trace_selected_fit01.csv
+├── maintenance/
+│   ├── hold_summary.csv
+│   ├── decision_summary.csv
+│   ├── daily_paths.csv
+│   ├── full_compositions.csv
+│   ├── portfolio_composition_summary.csv
+│   ├── top50_compositions.csv
+│   ├── recovery_candidates.csv
+│   ├── recovery_state_log.csv
+│   ├── recovery_funding_actions.csv
+│   ├── small_weight_summary.csv
+│   ├── sequential_rebalance_audit.csv
+│   ├── delta_w_selected_rows.csv
+│   ├── delta_w_cgrid_all_holds.csv
+│   └── delta_w_mala_diagnostics.csv
+├── comparisons/
+│   └── te_turnover_frontier_full_horizon_data.csv
+├── csv_manifest.csv
+└── checksums.csv
 ```
 
-The exact notebook filenames may include the suffix `_github_ready` in the archived preparation version. For publication, the shorter names above are recommended.
+The CSV files are archived at the repository root level under `construction/`, `maintenance/`, `comparisons/`, and `data/`. They are not stored under a separate `outputs/` directory.
 
 ## Data
 
@@ -73,9 +73,9 @@ data/asset_universe.csv
 data/rolling_windows.csv
 ```
 
-record the ticker universe and the locked rolling-window protocol used by the paper.
+record the ticker universe and the locked rolling-window protocol used in the paper.
 
-The data were prepared from publicly available Yahoo Finance data. Users are responsible for respecting the terms of any original data providers.
+The returns were prepared from publicly available Yahoo Finance data. Users are responsible for respecting the terms of any original data providers.
 
 ## Python environment
 
@@ -96,7 +96,7 @@ The notebooks can also be run in Google Colab. Production runs involve long MALA
 Open and run:
 
 ```text
-01_tracker_construction_github.ipynb
+01_tracker_construction.ipynb
 ```
 
 For a quick syntax and pipeline check, leave:
@@ -111,7 +111,7 @@ For the paper run, set:
 RUN_PRODUCTION = True
 ```
 
-The production construction run should select the `c = 25` construction row, produce an initial 59-name support before the one-off implementability floor, and produce a 53-name tracker after the 0.5% floor. The archived construction outputs in `outputs/construction/` reproduce the construction grid, selected row, SAPG/FISTA traces, posterior diagnostics, support sensitivity, and floor audit reported in the paper and supplement.
+The production construction run should select the `c = 25` construction row, produce an initial 59-name support before the one-off implementability floor, and produce a 53-name tracker after the 0.5% floor. The archived construction outputs in `construction/` reproduce the construction grid, selected row, SAPG/FISTA traces, posterior diagnostics, support sensitivity, and floor audit reported in the paper and supplement.
 
 The construction notebook exports a tracker cache used by the maintenance notebook. The expected production cache is named along the lines of:
 
@@ -124,7 +124,7 @@ initial_tracker_fit01_nnz150_c25_floor005_53names.npz
 Open and run:
 
 ```text
-02_tracker_maintenance_github.ipynb
+02_tracker_maintenance.ipynb
 ```
 
 For the paper run, set:
@@ -133,7 +133,7 @@ For the paper run, set:
 RUN_PRODUCTION = True
 ```
 
-The maintenance notebook loads the floor-applied tracker cache and then runs the H1--H16 sequential holding and recovery experiment. The archived maintenance outputs in `outputs/maintenance/` reproduce the hold-level TE path, implemented decisions, recovery diagnostics, posterior candidate logs, complete `Delta w` grids, selected grid rows, MALA diagnostics, daily realised paths, and full portfolio-composition path.
+The maintenance notebook loads the floor-applied tracker cache and then runs the H1--H16 sequential holding and recovery experiment. The archived maintenance outputs in `maintenance/` reproduce the hold-level TE path, implemented decisions, recovery diagnostics, posterior candidate logs, complete `Delta w` grids, selected grid rows, MALA diagnostics, daily realised paths, and full portfolio-composition path.
 
 The production maintenance run should reproduce the following headline values, up to small numerical tolerance:
 
@@ -147,15 +147,16 @@ The production maintenance run should reproduce the following headline values, u
 
 Small numerical differences can occur across machines because the production workflow contains stochastic MCMC steps, although the notebooks set random seeds and use fixed algorithmic settings for reproducibility.
 
-## Archived outputs
+## Archived CSV outputs
 
 The archived CSV files are included so that the tables and figures can be audited without rerunning the full production chains.
 
-- `outputs/construction/` contains construction-stage loss-scale calibration, selected-row, SAPG, FISTA, posterior-MALA, support-sensitivity, and floor-audit outputs.
-- `outputs/maintenance/` contains full-horizon hold summaries, decisions, recovery states, candidate-level posterior diagnostics, complete and selected `Delta w` grid rows, MALA diagnostics, daily paths, and portfolio compositions.
-- `outputs/comparisons/` contains the data used for the full-horizon tracking-error--turnover frontier figure.
-- `outputs/csv_manifest.csv` describes the archived CSV files.
-- `outputs/checksums.csv` records SHA256 checksums for the archived CSV files.
+- `construction/` contains construction-stage loss-scale calibration, selected-row, SAPG, FISTA, posterior-MALA, support-sensitivity, and floor-audit outputs.
+- `maintenance/` contains full-horizon hold summaries, decisions, recovery states, candidate-level posterior diagnostics, complete and selected `Delta w` grid rows, MALA diagnostics, daily paths, and portfolio compositions.
+- `comparisons/` contains the data used for the full-horizon tracking-error--turnover frontier figure.
+- `data/` contains the processed return matrix, asset universe, and locked rolling-window definitions.
+- `csv_manifest.csv` describes the archived CSV files.
+- `checksums.csv` records SHA256 checksums for the archived CSV files.
 
 ## Notes on interpretation
 
@@ -176,4 +177,3 @@ If you use this repository, please cite the associated paper:
 ```text
 Dimitrios Roxanas. Low-Turnover Rebalancing for Sparse Index Tracking.
 ```
-
